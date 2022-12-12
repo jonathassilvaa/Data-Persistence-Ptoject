@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI bestScoreTxt;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -22,6 +25,8 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetBestScore();
+        SetName();
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -39,7 +44,14 @@ public class MainManager : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   //set best score
+        if (m_Points > gameManager.bestScore)
+        {
+            gameManager.bestScore = m_Points;
+            SetBestScore();
+        }
+        
+        //
         if (!m_Started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -68,9 +80,26 @@ public class MainManager : MonoBehaviour
         ScoreText.text = $"Score : {m_Points}";
     }
 
+
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+    }
+
+    public void SetName()
+    {
+        nameText.SetText("Name:" + gameManager.playerName);
+
+    }
+
+    public void SetBestScore()
+    {
+        bestScoreTxt.SetText("Best Score:" + gameManager.bestScore);
+    }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
